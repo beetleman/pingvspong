@@ -26,6 +26,7 @@ from .game import (
 
 TOKEN ='token'
 CONTEST_TABLE = 'contest_table'
+LAST_TIME = 'last_time'
 
 
 def check_token(f):
@@ -41,11 +42,21 @@ def get_contest_table():
     return session.get(CONTEST_TABLE, [])
 
 
+def get_last_time():
+    return session.get(LAST_TIME, None)
+
+
+def set_last_time(t):
+    session[LAST_TIME] = t
+
+
+
 @current_app.route('/', methods=('GET', ))
 def index():
     token = uuid=uuid1().hex
     session[TOKEN] = token
-    session[CONTEST_TABLE] = [[0, 0]]
+    session[CONTEST_TABLE] = []
+    session[LAST_TIME] = get_time(datetime.now())
     return render_template('index.html', app_config={
         'token': token,
         'url': url_for('ping')
@@ -55,11 +66,24 @@ def index():
 @current_app.route('/api/ping', methods=('POST', ))
 @check_token
 def ping():
+    current_time = get_time(datetime.now())
+
+    if get_last_time() is not None:
+        current_time_diff = time_diff(
+            current_time,
+            get_last_time()
+        )
+    else:
+        current_time_diff = None
+
     get_contest_table().append(
-        get_time(datetime.now()),
+        current_time_diff,
     )
+    set_last_time(current_time)
     session.modified = True
+
     return jsonify(
         is_end=is_end(get_contest_table()),
-        best_time=cal_average_diff(get_contest_table())
+        average_time=cal_average_diff(get_contest_table()),
+        last_time = current_time_diff
     )

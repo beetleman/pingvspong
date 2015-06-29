@@ -18,25 +18,19 @@ def get_time(dt):
 
 def time_diff(t1, t2, f=sub):
     # print 'time_diff', t1, t2
-    return map(lambda x: f(*x), zip(t1, t2))
-
-
-def time_diff_table(tab, f=sub):
-    tab_iter = iter(tab)
-    last = tab_iter.next()
-    tmp = []
-    for t in tab_iter:
-        tmp.append(time_diff(t, last, f))
-        last = t
-    return tmp
+    diff = map(lambda x: f(*x), zip(t1, t2))
+    if diff[1] < 0:
+       return diff[0] - 1, 1000000 + diff[1]
+    return diff
 
 
 def cal_average_diff(tab):
-    if len(tab) < 4:
+    if len(tab) < 5:
         return None
-    tab = time_diff_table(tab)
-    return map(lambda t: int(t/len(tab)), reduce(
+    tab = sorted(tab)[2:-2] # odrzucam skrajne
+    r = map(lambda t: int(t/len(tab)), reduce(
         lambda acc, x: time_diff(acc, x, add),
-        sorted(tab)[2:-2],  # odrzucam skrajne
+        tab,
         (0, 0),
     ))
+    return r
