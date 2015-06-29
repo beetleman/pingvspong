@@ -24,7 +24,7 @@ from .game import (
 )
 
 
-TOKEN ='token'
+TOKEN = 'token'
 CONTEST_TABLE = 'contest_table'
 LAST_TIME = 'last_time'
 
@@ -50,10 +50,9 @@ def set_last_time(t):
     session[LAST_TIME] = t
 
 
-
 @current_app.route('/', methods=('GET', ))
 def index():
-    token = uuid=uuid1().hex
+    token = uuid = uuid1().hex
     session[TOKEN] = token
     session[CONTEST_TABLE] = []
     session[LAST_TIME] = get_time(datetime.now())
@@ -85,5 +84,5 @@ def ping():
     return jsonify(
         is_end=is_end(get_contest_table()),
         average_time=cal_average_diff(get_contest_table()),
-        last_time = current_time_diff
+        last_time=current_time_diff
     )
