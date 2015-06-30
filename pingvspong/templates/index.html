@@ -24,17 +24,23 @@
     </head>
 
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="one-half column">
-                    <h1>Ping vs Pong</h4>
+        <header>
+            <div class="container">
+                <div class="row">
+                    <div class="one-half column">
+                        <h1>Ping vs Pong</h4>
+                    </div>
                 </div>
             </div>
-            <div id="ping-pong"></div>
-            <div id="average-pong">Uśredniony ping:
-                <span class="sec">0</span> sekund i <span class="msec">0</span> mikrosekund</div>
+        </header>
+        <main>
+            <div class="container" id="ping-pong">
             </div>
-        </div>
+        </main>
+        <footer>
+            <div class="container" id="average-pong">Uśredniony ping:
+                <span class="sec">0</span> sekund i <span class="msec">0</span> mikrosekund</div>
+        </footer>
         <script type="text/javascript"
                 src="{{ url_for('static', filename='js/main.js')}}"></script>
     </body>
