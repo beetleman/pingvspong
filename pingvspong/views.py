@@ -5,6 +5,7 @@ import time
 from uuid import uuid1
 from functools import wraps
 from datetime import datetime
+from operator import add
 
 from flask import (
     current_app,
@@ -27,7 +28,7 @@ from .game import (
 TOKEN = 'token'
 CONTEST_TABLE = 'contest_table'
 LAST_TIME = 'last_time'
-
+PAUSE_TIME = (0, 700000)
 
 def check_token(f):
     @wraps(f)
@@ -47,7 +48,11 @@ def get_last_time():
 
 
 def set_last_time(t):
-    session[LAST_TIME] = t
+    session[LAST_TIME] = time_diff(
+        t,
+        PAUSE_TIME,
+        add
+    )
 
 
 @current_app.route('/', methods=('GET', ))
@@ -55,17 +60,19 @@ def index():
     token = uuid = uuid1().hex
     session[TOKEN] = token
     session[CONTEST_TABLE] = []
-    session[LAST_TIME] = get_time(datetime.now())
+    set_last_time(get_time(datetime.now()))
     return render_template('index.html', app_config={
         'token': token,
-        'url': url_for('ping')
+        'url': url_for('ping'),
+        'pause_time': PAUSE_TIME[0]*1000 + PAUSE_TIME[1]/1000.0
     })
 
 
 @current_app.route('/api/ping', methods=('POST', ))
 @check_token
 def ping():
-    current_time = get_time(datetime.now())
+    dt = datetime.now()
+    current_time = get_time(dt)
 
     if get_last_time() is not None:
         current_time_diff = time_diff(

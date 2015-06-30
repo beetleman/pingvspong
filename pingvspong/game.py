@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-from datetime import datetime
+from datetime import (
+    datetime,
+)
 from operator import sub, add
 import time
 
@@ -10,8 +12,9 @@ def is_end(tab):
     return 12 == len(tab)
 
 
-def get_time(dt):
-    return int(time.mktime(dt.timetuple())), dt.microsecond
+def get_time(dt, offset=None):
+    return  int(time.mktime(dt.timetuple())) , dt.microsecond
+    return time_diff(t, offset or (0, 0), f=sub)
 
 
 def time_diff(t1, t2, f=sub):
