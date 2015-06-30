@@ -88,11 +88,7 @@ def ping():
     )
     set_last_time(current_time)
     session.modified = True
-    print(dict(
-        is_end=is_end(get_contest_table()),
-        average_time=cal_average_diff(get_contest_table()),
-        last_time=current_time_diff
-    ))
+
     return jsonify(
         is_end=is_end(get_contest_table()),
         average_time=cal_average_diff(get_contest_table()),

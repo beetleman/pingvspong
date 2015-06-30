@@ -28,7 +28,6 @@ def get_time(dt, offset=None):
 
 
 def time_diff(t1, t2, f=sub):
-    # print 'time_diff', t1, t2
     diff = tuple(map(lambda x: f(*x), zip(t1, t2)))
     if diff[1] < 0:
         return diff[0] - 1, 1000000 + diff[1]
