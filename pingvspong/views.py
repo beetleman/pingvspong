@@ -30,6 +30,7 @@ CONTEST_TABLE = 'contest_table'
 LAST_TIME = 'last_time'
 PAUSE_TIME = (0, 700000)
 
+
 def check_token(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -64,7 +65,7 @@ def index():
     return render_template('index.html', app_config={
         'token': token,
         'url': url_for('ping'),
-        'pause_time': PAUSE_TIME[0]*1000 + PAUSE_TIME[1]/1000.0
+        'pause_time': PAUSE_TIME[0] * 1000 + PAUSE_TIME[1] / 1000.0
     })
 
 
@@ -87,7 +88,11 @@ def ping():
     )
     set_last_time(current_time)
     session.modified = True
-
+    print(dict(
+        is_end=is_end(get_contest_table()),
+        average_time=cal_average_diff(get_contest_table()),
+        last_time=current_time_diff
+    ))
     return jsonify(
         is_end=is_end(get_contest_table()),
         average_time=cal_average_diff(get_contest_table()),
